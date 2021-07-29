@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const { signup, login, isLogin } = require('./controller/auth');
 const { getBranchesAutocomplete, getBranches } = require('./controller/bank');
+const { port } = require('./config');
 
 const app = express();
 
@@ -23,4 +24,4 @@ app.use((err, req, res, next) => {
   res.status(400).json({ error: err.message });
 });
 
-app.listen(3000);
+app.listen(port);

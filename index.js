@@ -1,4 +1,5 @@
 const http = require('./app');
+const { port } = require('./config');
 const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
@@ -12,6 +13,6 @@ io.on('connection', (socket) => {
   });
 });
 
-http.listen(3000, () => {
+http.listen(port, () => {
   console.log('listening on localhost:3000');
 });

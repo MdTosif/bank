@@ -13,7 +13,7 @@ app.get('/noti', (req, res) => {
   res.sendFile(`${__dirname}/index.html`);
 });
 
-app.post('/api/signup', signup);
+app.post('/api/signup', signup, login);
 
 app.post('/api/login', login);
 

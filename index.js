@@ -1,27 +1,17 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const { signup, login, isLogin } = require('./controller/auth');
-const { getBranchesAutocomplete, getBranches } = require('./controller/bank');
-const { port } = require('./config');
+const http = require('./app');
+const io = require('socket.io')(http);
 
-const app = express();
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(cookieParser());
-
-app.post('/api/signup', signup);
-
-app.post('/api/login', login);
-
-app.get('/api/branches/autocomplete', isLogin, getBranchesAutocomplete);
-
-app.get('/api/branches', isLogin, getBranches);
-
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(400).json({ error: err.message });
+io.on('connection', (socket) => {
+  socket.on('new_notification', (data) => {
+    console.log(data.title, data.message);
+    io.sockets.emit('show_notification', {
+      title: data.title,
+      message: data.message,
+      icon: data.icon,
+    });
+  });
 });
 
-app.listen(port);
+http.listen(3000, () => {
+  console.log('listening on localhost:3000');
+});

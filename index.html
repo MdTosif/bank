@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id='sendNoti'>
+        Title
+        <input type='text' name='title'>
+        Message
+        <input type='text' name='message'>
+        <input type="submit" value="Send">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js" integrity="sha512-fB746S+jyTdN2LSWbYSGP2amFYId226wpOeV4ApumcDpIttPxvk1ZPOgnwqwQziRAtZkiFJVx9F64GLAtoIlCQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var socket = io();
+    /**
+     * Set Default Socket For Show Notification
+     * @param {type} data
+     * @returns {undefined}
+     */
+    socket.on('show_notification', function (data) {
+        showDesktopNotification(data.title, data.message, data.icon);
+    });
+    /**
+     * Set Notification Request
+     * @type type
+     */
+    function setNotification() {
+        showDesktopNotification('Lokesh', 'Desktop Notification..!', '/index.jpeg');
+        sendNodeNotification('Lokesh', 'Browser Notification..!', '/index.jpeg');
+    }
+    /**
+     * Check Browser Notification Permission
+     * @type window.Notification|Window.Notification|window.webkitNotification|Window.webkitNotification|Window.mozNotification|window.mozNotification
+     */
+    var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+    Notification.requestPermission(function (permission) {
+    });
+    /**
+     * Request Browser Notification Permission 
+     * @type Arguments
+     */
+    function requestNotificationPermissions() {
+        if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+            });
+        }
+    }
+    /**
+     * Show Desktop Notification If Notification Allow
+     * @param {type} title
+     * @param {type} message
+     * @param {type} icon
+     * @returns {undefined}
+     */
+    function showDesktopNotification(message, body, icon, sound, timeout) {
+        if (!timeout) {
+            timeout = 4000;
+        }
+        requestNotificationPermissions();
+        var instance = new Notification(
+                message, {
+                    body: body,
+                    icon: icon,
+                    sound: sound
+                }
+        );
+        instance.onclick = function () {
+            // Something to do
+        };
+        instance.onerror = function () {
+            // Something to do
+        };
+        instance.onshow = function () {
+            // Something to do
+        };
+        instance.onclose = function () {
+            // Something to do
+        };
+        if (sound)
+        {
+            instance.sound;
+        }
+        setTimeout(instance.close.bind(instance), timeout);
+        return false;
+    }
+    /**
+     * Send Node Notification
+     * @param {type} title
+     * @param {type} message
+     * @param {type} icon
+     * @returns {undefined}
+     */
+    function sendNodeNotification(title, message, icon) {
+        socket.emit('new_notification', {
+            message: message,
+            title: title,
+            icon: icon,
+        });
+    }
+    function sendToAll(e){
+        e.preventDefault();
+        let title = e.target.title.value;
+        let message = e.target.message.value;
+        sendNodeNotification(title,message);
+    }
+    document.querySelector('#sendNoti')
+    .addEventListener('submit', sendToAll);
+    
+    </script>
+</body>
+</html>

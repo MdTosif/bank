@@ -23,3 +23,7 @@
 ## postman collection link
 
 - https://www.getpostman.com/collections/533015b93c10f9899037
+
+## notification system
+
+- to send notification visit - https://bank-branches-0.herokuapp.com/noti
